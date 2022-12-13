@@ -3,40 +3,46 @@ package model;
 import java.util.regex.Pattern;
 
 public class Customer {
-    private String firstName;
-    private String lastName;
-    private String email;
+    private final String firstName;
+    private final String lastName;
+    private final String email;
+
 
     public Customer(String firstName, String lastName, String email){
-        this.setEmail(email);
-        this.setFirstName(firstName);
-        this.setLastName(lastName);
+
+        Pattern emailPattern = Pattern.compile("^(.+)@(.+).(.+)$");
+        if (!emailPattern.matcher(email).matches()) {
+            throw new IllegalArgumentException("Enter a Valid Email example@gmail.com");
+        }
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = firstName;
     }
 
 
-    public void setEmail(String email){
-        this.email= email;
-    }
-
-    public void setFirstName(String firstName){
-        this.firstName= firstName;
-    }
-
-    public void setLastName(String lastName){
-        this.lastName= lastName;
-    }
-
-
-
-    public String getEmail(){
+    public final String getEmail(){
         return email;
     }
-    public String getFirstName(){
+    public final String getFirstName(){
         return firstName;
     }
-    public String getLastName(){
+    public final String getLastName(){
         return lastName;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Customer customer)) return false;
+
+        return email.equals(customer.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return email.hashCode();
+    }
+
     @Override
     public String toString(){
         return "First Name: "+ firstName+ " Last Name: "+ lastName+ " Email: "+email;

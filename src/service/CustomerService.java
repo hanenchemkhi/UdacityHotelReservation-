@@ -1,6 +1,7 @@
 package service;
 
 import model.Customer;
+import model.Reservation;
 
 import java.util.*;
 
@@ -26,24 +27,35 @@ public class CustomerService {
         return CustomerService.SingletonHelper.INSTANCE;
     }
 
+    service.ReservationService reservationService = ReservationService.getInstance();
     /**
      *Used Map structure to be able to retrieve customer info based on their email
      * as it is explained in lesson 7 : 2.Maps
      */
     Map<String, Customer> customers = new TreeMap<>();
 
-    public void addCustomer(String email, String firstName, String lastName) throws Exception {
-        if (getCustomer(email)!= null){
-            throw new Exception("Customer account already exist");
-        }else {
+    public void addCustomer(String email, String firstName, String lastName) {
             customers.put(email, new Customer(firstName, lastName, email));
+    }
+
+//   public Customer getCustomer(String customerEmail){
+//        return customers.get(customerEmail);
+//    }
+public Customer getCustomer(String customerEmail) throws Exception{
+    Customer customer = customers.get(customerEmail);
+    if (customer == null){
+        throw new Exception("Customer account not found");
+    }
+    return customer ;
+}
+    public Collection<Reservation> getCustomerReservation(String customerEmail){
+        try{
+            Customer customer = getCustomer(customerEmail);
+            return reservationService.getCustomersReservation(customer);
+        }catch(Exception e) {
+            return null;
         }
     }
-
-    public Customer getCustomer(String customerEmail){
-        return customers.get(customerEmail);
-    }
-
     public Collection<Customer> getAllCustomers(){
         return new ArrayList<>(customers.values());
     }

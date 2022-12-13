@@ -3,6 +3,12 @@ import java.util.*;
 import api.AdminResource;
 import model.*;
 
+/**
+ * Give the Admin to add a room and display all customers, rooms and reservations
+ *
+ * @author Hanen Chemkhi
+ */
+
 public class AdminMenu {
 
     public static void printAdminMenu(){
@@ -60,17 +66,13 @@ public class AdminMenu {
     private static void displayAllCustomers(){
         api.AdminResource adminResource = new AdminResource();
         Collection<Customer> allCustomers = adminResource.getAllCustomers();
-        for (Customer customer : allCustomers) {
-            System.out.println(customer);
-        }
+        allCustomers.forEach(System.out::println);
     }
 
     private static void displayAllRooms(){
         api.AdminResource adminResource= new AdminResource();
         Collection<IRoom> allRooms = adminResource.getAllRooms();
-        for (IRoom room : allRooms){
-            System.out.println(room);
-        }
+        allRooms.forEach(System.out::println);
     }
 
     private static void displayAllReservations(){
@@ -83,7 +85,7 @@ public class AdminMenu {
         List<IRoom> rooms = new LinkedList<>();
         Validator validator = new Validator();
         String roomNumber;
-        Double roomPrice;
+        double roomPrice;
         RoomType roomType;
         String keepAdding = "y";
         while (keepAdding.equals("y")) {

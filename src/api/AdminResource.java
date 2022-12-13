@@ -13,18 +13,21 @@ public class AdminResource {
     CustomerService customerService =  CustomerService.getInstance();
     ReservationService reservationService = ReservationService.getInstance();
 
-    public Customer getCustomer(String email) throws Exception{
-        Customer customer = customerService.getCustomer(email);
-        if (customer == null){
-            throw new Exception();
-        }
-        return customer ;
+   public Customer getCustomer(String email) {
+       try {
+        return customerService.getCustomer(email);
+       } catch(Exception e){
+           System.out.println(e.getLocalizedMessage());
+           return null;
+       }
+
     }
 
     public void addRoom(List<IRoom> rooms){
-        for(IRoom room : rooms){
+        /*for(IRoom room : rooms){
             reservationService.addRoom(room);
-        }
+        }*/
+        rooms.forEach(reservationService::addRoom);
     }
 
     public Collection<IRoom> getAllRooms(){

@@ -4,7 +4,7 @@ import model.Customer;
 import model.IRoom;
 import model.Reservation;
 import java.util.*;
-
+import java.util.stream.Collectors;
 
 
 public class ReservationService {
@@ -22,18 +22,25 @@ public class ReservationService {
     private final List<Reservation> reservations = new LinkedList<>();
 
 
-    private final Map<String,IRoom> rooms = new HashMap<>();
-
+    //private final Map<String,IRoom> rooms = new HashMap<>();
+    private final Set<IRoom> rooms = new HashSet<>();
     public void addRoom(IRoom room){
-        rooms.put(room.getRoomNumber(), room);
+        rooms.add(room);
     }
 
     public IRoom getRoom(String roomId){
-        return rooms.get(roomId);
+        for (IRoom room : rooms) {
+            if (room.getRoomNumber().equals(roomId)) {
+                return room;
+            }
+        }
+        return null;
+        //return rooms.stream().filter(room->room.getRoomNumber().equals(roomId)).findAny().orElse(null);
     }
 
+
     public Collection<IRoom> getAllRooms(){
-        return new LinkedList<>(rooms.values());
+        return new LinkedList<>(rooms);
 
     }
 
@@ -46,33 +53,56 @@ public class ReservationService {
     public Collection<IRoom> findRooms(Date checkIn, Date checkOut){
 
         Collection<IRoom> reservedRooms= new LinkedList<>();
-        Collection<IRoom> allRooms = getAllRooms();
+        Collection<IRoom> availableRooms = getAllRooms();
 
         for (Reservation reservation : reservations) {
             if ( ! reservation.getCheckOutDate().before(checkIn) || checkOut.before(reservation.getCheckInDate())) {
                 reservedRooms.add(reservation.getRoom());
             }
         }
+        availableRooms.removeAll(reservedRooms);
 
-        allRooms.removeAll(reservedRooms);
-        return allRooms;
+        return availableRooms;
+    }
+    public Collection<IRoom> searchRecommendedRooms(Date checkIn, Date checkOut, int date){
+        checkIn = addDays(checkIn, date);
+        checkOut = addDays(checkOut, date);
+        return findRooms(checkIn, checkOut);
+
     }
 
-    public List<Reservation> getCustomersReservation(Customer customer){
 
-        List<Reservation> customerReservation= new LinkedList<>();
-        for(Reservation reservation : reservations){
-            if (reservation.getCustomer().getEmail().equals(customer.getEmail())){
-                customerReservation.add(reservation);
-            }
-        }
-        return customerReservation;
+
+     List<Reservation> getCustomersReservation(Customer customer){
+        List<Reservation> customerReservation = new ArrayList<>();
+         for(Reservation reservation : reservations) {
+             if (reservation.getCustomer().getEmail().equals(customer.getEmail())) {
+                 customerReservation.add(reservation);
+             }
+         }
+         return customerReservation;
+
+        /*return reservations.stream().
+                filter(reservation ->reservation.getCustomer().getEmail().equals(customer.getEmail()) ).
+                collect(Collectors.toList());*/
     }
     public void printAllReservation(){
         System.out.println("All Reservations :");
-        for (Reservation reservation : reservations){
-            System.out.println(reservation);
-        }
+        reservations.forEach(System.out::println);
+    }
+
+    public static Date flexDate(Date date, int days){
+        return addDays(date, days);
+    }
+
+
+
+    public static Date addDays(Date date, int days)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, days);
+        return cal.getTime();
     }
 
 }

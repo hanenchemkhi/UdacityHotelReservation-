@@ -2,6 +2,7 @@ import model.RoomType;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -31,7 +32,7 @@ public class Validator {
                 break;
             }
         }
-        return email;
+        return email.strip();
     }
 
     public String validateName(String text) {
@@ -45,7 +46,7 @@ public class Validator {
                 break;
             }
         }
-        return name;
+        return name.strip();
     }
 
     public String validateRoomNumber(String text){
@@ -54,12 +55,12 @@ public class Validator {
         while(true){
             roomNumber = sc.nextLine();
             if (!roomNumberPattern.matcher(roomNumber).matches()){
-                System.out.println("Please enter a valid room Number ");
+                System.out.println("text");
             }else{
                 break;
             }
         }
-        return roomNumber;
+        return roomNumber.strip();
     }
     public double validateRoomPrice(){
         String roomPrice;
@@ -98,7 +99,7 @@ public class Validator {
             if (!responsePattern.matcher(response).matches()){
                 System.out.println("Please enter Y (Yes) or N(No)");
             }else {
-                return response.toLowerCase();
+                return response.toLowerCase().strip();
             }
         }
     }
@@ -109,7 +110,7 @@ public class Validator {
         //Scanner sc = new Scanner(System.in);
         while(true) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-            System.out.println(text + dateFormat.format(MainMenu.addDays(d,1)));
+            System.out.println(text + dateFormat.format(addDays(d,1)));
             String date = sc.nextLine();
             try {
                 //Parsing the date input
@@ -122,5 +123,12 @@ public class Validator {
                 return checkDate;
 
         }
+    }
+
+    public static Date addDays(Date date, int days) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, days);
+        return cal.getTime();
     }
 }

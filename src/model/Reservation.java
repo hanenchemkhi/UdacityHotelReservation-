@@ -6,10 +6,10 @@ import java.util.Date;
 
 public class Reservation {
 
-    Customer customer;
-    IRoom room;
-    Date checkInDate;
-    Date checkOutDate;
+    private final Customer customer;
+    private final IRoom room;
+    private final Date checkInDate;
+    private final Date checkOutDate;
 
     public Reservation(Customer customer, IRoom room, Date checkInDate, Date checkOutDate){
         this.customer = customer;
@@ -19,20 +19,40 @@ public class Reservation {
 
     }
 
-    public Customer getCustomer() {
+    public final Customer getCustomer() {
         return customer;
     }
 
-    public IRoom getRoom() {
+    public final IRoom getRoom() {
         return room;
     }
 
-    public Date getCheckInDate() {
+    public final Date getCheckInDate() {
         return checkInDate;
     }
 
-    public Date getCheckOutDate() {
+    public final Date getCheckOutDate() {
         return checkOutDate;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Reservation that)) return false;
+
+        if (!getCustomer().equals(that.getCustomer())) return false;
+        if (!getRoom().equals(that.getRoom())) return false;
+        if (!getCheckInDate().equals(that.getCheckInDate())) return false;
+        return getCheckOutDate().equals(that.getCheckOutDate());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getCustomer().hashCode();
+        result = 31 * result + getRoom().hashCode();
+        result = 31 * result + getCheckInDate().hashCode();
+        result = 31 * result + getCheckOutDate().hashCode();
+        return result;
     }
 
     @Override

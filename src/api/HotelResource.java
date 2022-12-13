@@ -53,9 +53,15 @@ public class HotelResource {//use of the service class to implement its methods
     }
 
     public Collection<Reservation> getCustomersReservations(String customerEmail){
+//        try{
+//            Customer customer = getCustomer(customerEmail);
+//            return reservationService.getCustomersReservation(customer);
+//        }catch(Exception e){
+//            System.out.println(e.getLocalizedMessage());
+//            return null;
+//        }
         try{
-            Customer customer = getCustomer(customerEmail);
-            return reservationService.getCustomersReservation(customer);
+            return customerService.getCustomerReservation(customerEmail);
         }catch(Exception e){
             System.out.println(e.getLocalizedMessage());
             return null;
@@ -65,4 +71,12 @@ public class HotelResource {//use of the service class to implement its methods
     public Collection<IRoom> findARoom(Date checkIn, Date checkOut){
         return reservationService.findRooms(checkIn, checkOut);
     }
+    public Collection<IRoom> searchRecommendedRooms(Date checkIn, Date checkOut, int date){
+        return reservationService.searchRecommendedRooms(checkIn, checkOut, date);
+    }
+
+    public Date flexibleDate(Date date, int days){
+        return ReservationService.flexDate(date, days);
+    }
+
 }
